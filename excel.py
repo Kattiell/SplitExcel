@@ -21,7 +21,7 @@ if uploaded_file:
                     num_col = df.iloc[1:, 5]
 
                     cnpj_col = cnpj_col.astype(str).str.strip().str.replace(r"\.0$", "", regex=True)
-                    num_col = num_col.astype(str).str.strip()
+                    num_col = num_col.astype(str).str.strip().str.replace(r"\.0$", "", regex=True)
 
                     resultado = pd.DataFrame({
                         "CNPJ": cnpj_col,
@@ -31,6 +31,7 @@ if uploaded_file:
                     resultado = resultado.dropna(how="all")
                     resultado = resultado[~resultado["CNPJ"].str.lower().str.contains("cnpj", na=False)]
                     resultado = resultado[~resultado["NUM"].str.lower().str.contains("num|telefone|whats", na=False)]
+
                     csv_buffer = io.StringIO()
                     resultado.to_csv(csv_buffer, index=False)
                     zip_file.writestr(f"{aba}.csv", csv_buffer.getvalue())
